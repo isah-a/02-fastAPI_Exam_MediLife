@@ -1,11 +1,20 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
+from starlette.middleware.base import BaseHTTPMiddleware
+from middleware import medical_middleware
+from logger import logger
 
 from routers.patient_routers import patient_router
 from routers.doctor_routers import doctor_router
 from routers.appointment_routers import appointment_router
 
+
 app = FastAPI()
+
+logger.info("starting app")
+
+app.add_middleware(BaseHTTPMiddleware, dispatch=medical_middleware)
+
 app.include_router(router=patient_router, prefix='/patient', tags=['Patient'])
 app.include_router(router=doctor_router, prefix='/doctor', tags=['Doctor'])
 app.include_router(router=appointment_router, prefix='/appointment', tags=['Appointment'])

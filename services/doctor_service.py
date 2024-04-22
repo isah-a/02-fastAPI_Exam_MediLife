@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from schema.doctor_schema import Doctor, DoctorCreate, DoctorUpdate, doctors
 
+from logger import logger
 # db = {}
 class DoctorService:
     @staticmethod

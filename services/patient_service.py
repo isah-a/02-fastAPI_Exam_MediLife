@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from schema.patient_schema import Patient, PatientCreate, PatientUpdate, patients
 
+from logger import logger
 db = []
 class PatientService:
     ######################### GET ALL PATIENTS #########################

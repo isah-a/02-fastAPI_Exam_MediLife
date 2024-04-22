@@ -2,6 +2,8 @@ from fastapi import HTTPException
 from schema. appointment_schema import Appointment, AppointmentCreate, AppointmentUpdate, Patient, Doctor, appointments, patients, doctors
 from datetime import datetime
 
+from logger import logger
+
 class AppointmentService:
     @staticmethod
     def get_all_appointments(appointment_db):
