@@ -4,12 +4,14 @@ from services.appointment_service import AppointmentService, AppointmentCreate, 
 
 appointment_router = APIRouter()
 
-@appointment_router.get('/all')
+####################  GET ALL AVAILABLE APPOINTMENTS ####################
+@appointment_router.get('/all', status_code=200)
 def get_appointments():
     data = AppointmentService.get_all_appointments(appointments)
     return {"message": data}
 
-@appointment_router.post('/create')
+####################  CREATE AN APPOINTMENT ####################
+@appointment_router.post('/create', status_code=201)
 def create_appointment(payload:AppointmentCreate = Depends(AppointmentService.create_appointment)):
     app_id = len(appointments)
     docs_ids =  [docs for docs in doctors if docs.is_available]
@@ -17,7 +19,8 @@ def create_appointment(payload:AppointmentCreate = Depends(AppointmentService.cr
     data = AppointmentCreate(id=app_id, patient=payload.patient, doctor=docs_ids[0], date=payload.date)
     return {"success":True, "data": data}
 
-@appointment_router.patch('/complete')
+####################  COMPLETE AN APPOINTMENT ####################
+@appointment_router.patch('/complete/{app_id}', status_code=200)
 def complete_appointment_by_id(app_id:int = Depends(AppointmentService.update_appointment)):
     app_id = AppointmentService.update_appointment(app_id)
     for app in appointments:
@@ -30,7 +33,8 @@ def complete_appointment_by_id(app_id:int = Depends(AppointmentService.update_ap
                 raise HTTPException(status_code=400, detail="Appointment has alreasdy been completed")
             
 
-@appointment_router.patch('/cancel/')
+####################  CANCEL AN APPOINTMENT ####################
+@appointment_router.patch('/cancel/{app_id}', status_code=200)
 def cancel_appointment_by_id(app_id:int = Depends(AppointmentService.update_appointment)):
     app_id = AppointmentService.update_appointment(app_id)
     for app in appointments:

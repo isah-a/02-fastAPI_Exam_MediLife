@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from schema.doctor_schema import Doctor, DoctorCreate, DoctorUpdate, doctors
 
 # db = {}
@@ -26,7 +27,7 @@ class DoctorService:
             if doc.id == id: 
                 return doc.model_dump() # I also noticed that this line still correctly returned the pydantic instance (as a dictionary) even without using model_dump(). 
         else:
-            return "does not exist"
+            raise HTTPException(status_code=400, detail="id does not exist to query.")
             
     ######################### TOTAL UPDATE ALL INFO FOR A SINGLE DOCTOR (PUT) #########################
     @staticmethod
@@ -36,7 +37,7 @@ class DoctorService:
                 doctors[doc_id] = Doctor(id=doc_id, **payload.model_dump())
                 return doctors[doc_id]
         else:
-            return "id does not exist to update"
+            raise HTTPException(status_code=400, detail="id does not exist to update")
             
     ######################### PARTIAL UPDATE OF A SINGLE DOCTOR (PATCH) #########################
     @staticmethod
@@ -48,7 +49,7 @@ class DoctorService:
                 new_dict = indx_model.model_copy(update=doctor)
                 return new_dict
         else:
-            return "id does not exist to update"
+            raise HTTPException(status_code=400, detail="id does not exist to update")
             
     ######################### DELETE A DOCTOR #########################
     @staticmethod
@@ -58,4 +59,4 @@ class DoctorService:
                 del doctors[doc.id] 
                 return doctors
             else:
-                return "id does not exist"
+                raise HTTPException(status_code=400, detail="id does not exist to delete.")
